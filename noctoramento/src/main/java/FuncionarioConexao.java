@@ -4,10 +4,13 @@ import java.sql.SQLException;
 
 public class FuncionarioConexao {
 
-    Conexao conexaoMySQL = new Conexao();
-    JdbcTemplate con = conexaoMySQL.getConexaoMySql();
+    // Conexao conexaoMySQL = new Conexao();
+    // JdbcTemplate con = conexaoMySQL.getConexaoMySql();
 
     public Integer contarUsuarioExistente(String email){
+
+        ConexaoSQL conexaoSQL = new ConexaoSQL();
+        JdbcTemplate con = conexaoSQL.getConexaoSqlServerLocal();
 
         String sql = "SELECT COUNT(*) FROM Usuario WHERE emailUsuario = ?;";
 
@@ -31,6 +34,9 @@ public class FuncionarioConexao {
 
     public Integer capturarIdFuncionario(String email){
 
+        ConexaoSQL conexaoSQL = new ConexaoSQL();
+        JdbcTemplate con = conexaoSQL.getConexaoSqlServerLocal();
+
         String sql = "SELECT idUsuario FROM Usuario WHERE emailUsuario = ?;";
 
         try {
@@ -52,6 +58,9 @@ public class FuncionarioConexao {
     }
 
     public Integer capturarIdNotebook(Integer idFuncionario, Integer idEmpresa){
+
+        ConexaoSQL conexaoSQL = new ConexaoSQL();
+        JdbcTemplate con = conexaoSQL.getConexaoSqlServerLocal();
 
         String sql = "SELECT fkNotebook FROM Alocacao WHERE fkUsuario = ? AND fkEmpresaUsuario = ?;";
 

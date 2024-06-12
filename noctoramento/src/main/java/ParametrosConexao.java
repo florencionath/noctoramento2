@@ -6,14 +6,15 @@ import java.sql.SQLException;
 
 public class ParametrosConexao {
 
-    Conexao conexaoMySQL = new Conexao();
+    // Conexao conexaoMySQL = new Conexao();
 
-    JdbcTemplate con = conexaoMySQL.getConexaoMySql();
+    // JdbcTemplate con = conexaoMySQL.getConexaoMySql();
+    ConexaoSQL conexaoSQL = new ConexaoSQL();
+    JdbcTemplate con = conexaoSQL.getConexaoSqlServerLocal();
 
     public Parametros capturarParametros(Integer fkEmpresa){
 
         String sql = "SELECT * FROM Parametros WHERE fkEmpresa = ?;";
-
 
         try {
             Parametros parametros = con.queryForObject(sql, new BeanPropertyRowMapper<>(Parametros.class), fkEmpresa);

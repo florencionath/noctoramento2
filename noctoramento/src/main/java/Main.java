@@ -20,15 +20,12 @@ public class Main {
         SuporteConexao suporteConexao = new SuporteConexao();
         NotebookConexao notebookConexao = new NotebookConexao();
 
+        ConexaoSQL conexaoSQL = new ConexaoSQL();
 
-        System.out.println("╭━╮╱╭╮╱╱╱╱╱╱╱╱╱╭╮╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╭╮╱╱╱╱╱\n" +
-                "┃┃╰╮┃┃╱╱╱╱╱╱╱╱╭╯╰╮╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╭╯╰╮╱╱╱╱\n" +
-                "┃╭╮╰╯┃╭━━╮╭━━╮╰╮╭╯╭━━╮╭━╮╭━━╮╭╮╭╮╭━━╮╭━━╮╰╮╭╯╭━━╮\n" +
-                "┃┃╰╮┃┃┃╭╮┃┃╭━╯╱┃┃╱┃╭╮┃┃╭╯┃╭╮┃┃╰╯┃┃┃━┫┃╭╮┃╱┃┃╱┃╭╮┃\n" +
-                "┃┃╱┃┃┃┃╰╯┃┃╰━╮╱┃╰╮┃╰╯┃┃┃╱┃╭╮┃┃┃┃┃┃┃━┫┃┃┃┃╱┃╰╮┃╰╯┃\n" +
-                "╰╯╱╰━╯╰━━╯╰━━╯╱╰━╯╰━━╯╰╯╱╰╯╰╯╰┻┻╯╰━━╯╰╯╰╯╱╰━╯╰━━╯\n" +
-                "╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱\n" +
-                "╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱");
+
+        System.out.println("\n░▒█▀▀▀█░█▀▀▄░█▀▀▄░█▀▀▄░█▀▀▄░█▀▀▄░█▀▀▄░█▀▄░▄▀▀▄░▀▀█▀▀░█▀▀░█▀▄░█░░░\n" +
+                "░░▀▀▀▄▄░█▄▄█░█▄▄▀░█▄▄█░█▀▀▄░█▄▄█░█░▒█░█░█░█░░█░░▒█░░░█▀▀░█░░░█▀▀█\n" +
+                "░▒█▄▄▄█░▀░░▀░▀░▀▀░▀░░▀░▀▀▀▀░▀░░▀░▀░░▀░▀▀░░░▀▀░░░▒█░░░▀▀▀░▀▀▀░▀░░▀\n");
         System.out.println("\nSeja bem-vindo(a)\n");
 
         Boolean loginRealizado = false;
@@ -51,7 +48,6 @@ public class Main {
                 loginRealizado = true;
             } else {
                 // Se as credenciais estiverem incorretas, solicita ao usuário que tente novamente
-                System.out.println("Email ou senha incorretos. Tente novamente.");
                 String data = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss.SSS").format(new Date());
                 String logLevel = "ERROR";
                 Integer statusCode = 401;
@@ -81,7 +77,6 @@ public class Main {
         Integer idEmpresa = suporte.buscarEmpresa(email, senha);
         Empresa empresa = suporteConexao.cadastrarEmpresa(idEmpresa);
         empresa.insertEmpresa();
-
 
         Boolean funcionarioVerificado = false;
         Funcionario funcionario = new Funcionario();
@@ -124,7 +119,7 @@ public class Main {
 
         do {
             registro.capturarDados(notebook.getIdNotebook(), empresa.getIdEmpresa());
-            parametros.alertar(registro.getUsoCpu(), registro.getUsoDisco(), registro.getUsoMemoriaRam(), registro.getId(), notebook.getIdNotebook());
+            parametros.alertar(funcionario.getNome(), notebook.getNumeroSerie(), registro.getUsoCpu(), registro.getUsoDisco(), registro.getUsoMemoriaRam(), registro.getId(), notebook.getIdNotebook());
 
             try {
                 TimeUnit.SECONDS.sleep(parametros.getTempoSegCapturaDeDados());

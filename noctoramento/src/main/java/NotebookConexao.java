@@ -5,8 +5,10 @@ import java.sql.SQLException;
 
 public class NotebookConexao {
 
-    Conexao conexaoMySQL = new Conexao();
-    JdbcTemplate con = conexaoMySQL.getConexaoMySql();
+    // Conexao conexaoMySQL = new Conexao();
+    // JdbcTemplate con = conexaoMySQL.getConexaoMySql();
+    ConexaoSQL conexaoSQL = new ConexaoSQL();
+    JdbcTemplate con = conexaoSQL.getConexaoSqlServerLocal();
 
     public Notebook cadastrarNotebook(Integer idNotebook){
 

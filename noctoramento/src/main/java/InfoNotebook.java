@@ -5,8 +5,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class InfoNotebook {
     Looca looca = new Looca();
     Sistema sistema = new Sistema();
+
+    // Conexão com o banco mysql:
+
     Conexao conexao = new Conexao();
     JdbcTemplate con = conexao.getConexaoMySql();
+
+    // Conexão com o banco SQL Server:
+
+    ConexaoSQL conexaoSQL = new ConexaoSQL();
+    JdbcTemplate conSQL = conexaoSQL.getConexaoSqlServerLocal();
 
     private Integer id = 0;
     private String sistemaOperacional;
@@ -30,12 +38,13 @@ public class InfoNotebook {
 
         // Insert no mysql Local
 
-        con.update("INSERT INTO InfoNotebook VALUES (null, ?, ?, ?, ?, ?, ?, ?)",
+        con.update("INSERT INTO InfoNotebook (sistemaOperacional, processador, capacidadeMaxCpu, maxDisco, maxMemoriaRam, fkNotebook, fkEmpresa) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 sistemaOperacional, processador, capacidadeMaxCpu, maxDisco, maxMemoriaRam, fkNotebookInsert, fkEmpresaInsert);
 
         // Insert no SQL Server
 
-
+        conSQL.update("INSERT INTO InfoNotebook (sistemaOperacional, processador, capacidadeMaxCpu, maxDisco, maxMemoriaRam, fkNotebook, fkEmpresa) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                sistemaOperacional, processador, capacidadeMaxCpu, maxDisco, maxMemoriaRam, fkNotebookInsert, fkEmpresaInsert);
 
         // Cadastrando os dados:
 

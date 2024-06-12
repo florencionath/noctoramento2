@@ -5,7 +5,7 @@ public class Reboot {
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
             if (so.equalsIgnoreCase("windows")) {
                 try {
-                    Thread.sleep(300000); // Simula uma operação assíncrona
+                    Thread.sleep(604800000); // Simula uma operação assíncrona
                     Process processo = Runtime.getRuntime().exec("shutdown /r /t 0");
                 } catch (InterruptedException | IOException e) {
                     e.printStackTrace();
@@ -13,7 +13,7 @@ public class Reboot {
             }
             if (so.equalsIgnoreCase("linux") || so.equalsIgnoreCase("mac")){
                 try {
-                    Thread.sleep(300000); // Simula uma operação assíncrona
+                    Thread.sleep(604800000); // Simula uma operação assíncrona
                     Process processo = Runtime.getRuntime().exec("shutdown -P now");
                 } catch (InterruptedException | IOException e) {
                     e.printStackTrace();

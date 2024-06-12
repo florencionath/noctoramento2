@@ -13,8 +13,17 @@ import java.util.List;
 
 
 public class Registro {
+
+    // Conexão com o banco mysql:
+
     Conexao conexao = new Conexao();
     JdbcTemplate con = conexao.getConexaoMySql();
+
+    // Conexão com o banco SQL Server:
+
+    ConexaoSQL conexaoSQL = new ConexaoSQL();
+    JdbcTemplate conSQL = conexaoSQL.getConexaoSqlServerLocal();
+
     Looca looca = new Looca();
     Sistema sistema = new Sistema();
     LocalDateTime dataHora = LocalDateTime.now();
@@ -36,7 +45,7 @@ public class Registro {
         double usoDisco = 0.0;
         String tempoAtividadeDisco = (Conversor.formatarSegundosDecorridos(sistema.getTempoDeAtividade()));
         double usoMemoriaRam = Math.round(Double.valueOf(looca.getMemoria().getEmUso())/ Math.pow(1024,3)); //
-        Integer qtdJanelasEmUso = looca.getGrupoDeJanelas().getTotalJanelas();
+        Integer qtdJanelasEmUso = looca.getGrupoDeJanelas().getTotalJanelasVisiveis();
         LocalDateTime dtHoraCaptura = dataHora;
         Integer fkNotebookInsert = fkNotebook;
         Integer fkEmpresaInsert = fkEmpresa;
@@ -55,12 +64,13 @@ public class Registro {
 
         // Insert no mysql local
 
-        con.update("INSERT INTO RegistroUsoNotebook VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?)",
+        con.update("INSERT INTO RegistroUsoNotebook (usoCpu, usoDisco, tempoAtividadeDisco, usoMemoriaRam, qtdJanelasEmUso, dtHoraCaptura, fkNotebook, fkEmpresa) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                 usoCpu, usoDisco, tempoAtividadeDisco, usoMemoriaRam, qtdJanelasEmUso,dtHoraCaptura, fkNotebookInsert, fkEmpresaInsert);
 
         // Insert no SQL Server
 
-
+        conSQL.update("INSERT INTO RegistroUsoNotebook (usoCpu, usoDisco, tempoAtividadeDisco, usoMemoriaRam, qtdJanelasEmUso, dtHoraCaptura, fkNotebook, fkEmpresa) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                usoCpu, usoDisco, tempoAtividadeDisco, usoMemoriaRam, qtdJanelasEmUso,dtHoraCaptura, fkNotebookInsert, fkEmpresaInsert);
 
         // Guardando dados no objeto:
 

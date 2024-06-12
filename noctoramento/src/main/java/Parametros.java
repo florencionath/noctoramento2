@@ -5,66 +5,81 @@ import java.util.concurrent.CompletableFuture;
 
 public class Parametros {
 
+    // Conexão com o banco mysql:
     Conexao conexao = new Conexao();
     JdbcTemplate con = conexao.getConexaoMySql();
+
+    // Conexão com o banco SQLServer:
+
+    ConexaoSQL conexaoSQL = new ConexaoSQL();
+    JdbcTemplate conSQL = conexaoSQL.getConexaoSqlServerLocal();
+
     ParametrosConexao parametrosConexao = new ParametrosConexao();
 
     private Integer idParametros;
     private Integer tempoSegCapturaDeDados;
     private Integer tempoSegAlertas;
-    private Double urgenteUsoCpu;
-    private Double urgenteUsoDisco;
-    private Double urgenteUsoMemoriaRam;
-    private Double alertaUsoCpu;
-    private Double alertaUsoDisco;
-    private Double alertaUsoMemoriaRam;
+    private Integer usoCriticoCpu;
+    private Integer usoCriticoDisco;
+    private Integer usoCriticoMemoriaRam;
+    private Integer usoAlarmanteCpu;
+    private Integer usoAlarmanteDisco;
+    private Integer usoAlarmanteMemoriaRam;
+    private Integer usoNormalCpu;
+    private Integer usoNormalDisco;
+    private Integer usoNormalMemoriaRam;
     private Integer fkEmpresa;
 
-    public Parametros(Integer idParametros, Integer tempoSegCapturaDeDados, Integer tempoSegAlertas, Double urgenteUsoCpu, Double urgenteUsoDisco, Double urgenteUsoMemoriaRam, Double alertaUsoCpu, Double alertaUsoDisco, Double alertaUsoMemoriaRam) {
+    public Parametros(Integer idParametros, Integer tempoSegCapturaDeDados, Integer tempoSegAlertas, Integer usoCriticoCpu, Integer usoCriticoDisco, Integer usoCriticoMemoriaRam, Integer usoAlarmanteCpu, Integer usoAlarmanteDisco, Integer usoAlarmanteMemoriaRam, Integer usoNormalCpu, Integer usoNormalDisco, Integer usoNormalMemoriaRam, Integer fkEmpresa) {
         this.idParametros = idParametros;
         this.tempoSegCapturaDeDados = tempoSegCapturaDeDados;
         this.tempoSegAlertas = tempoSegAlertas;
-        this.urgenteUsoCpu = urgenteUsoCpu;
-        this.urgenteUsoDisco = urgenteUsoDisco;
-        this.urgenteUsoMemoriaRam = urgenteUsoMemoriaRam;
-        this.alertaUsoCpu = alertaUsoCpu;
-        this.alertaUsoDisco = alertaUsoDisco;
-        this.alertaUsoMemoriaRam = alertaUsoMemoriaRam;
+        this.usoCriticoCpu = usoCriticoCpu;
+        this.usoCriticoDisco = usoCriticoDisco;
+        this.usoCriticoMemoriaRam = usoCriticoMemoriaRam;
+        this.usoAlarmanteCpu = usoAlarmanteCpu;
+        this.usoAlarmanteDisco = usoAlarmanteDisco;
+        this.usoAlarmanteMemoriaRam = usoAlarmanteMemoriaRam;
+        this.usoNormalCpu = usoNormalCpu;
+        this.usoNormalDisco = usoNormalDisco;
+        this.usoNormalMemoriaRam = usoNormalMemoriaRam;
+        this.fkEmpresa = fkEmpresa;
     }
 
     public Parametros(){
     }
 
 
-    public void alertar(Double usoCpu, Double usoDisco, Double usoMemoriaRam, Integer fkRegistro, Integer fkNotebook){
+    public void alertar(String nomeFuncionario, String numeroNotebook , Double usoCpu, Double usoDisco, Double usoMemoriaRam, Integer fkRegistro, Integer fkNotebook){
 
         String alerta = "";
         Boolean emitirAlerta = false;
 
-        if (usoCpu > alertaUsoCpu && usoCpu < urgenteUsoCpu){
-            alerta += ("Cpu está em estado de alerta: " + usoCpu + "\n");
+        if (usoCpu > usoAlarmanteCpu && usoCpu < usoCriticoCpu){
+            alerta += ("Cpu está em estado de alerta\n");
             emitirAlerta = true;
-        } else if (usoCpu > alertaUsoCpu && usoCpu > urgenteUsoCpu){
-            alerta += ("Cpu está em estado crítico: " + usoCpu + "\n");
-            emitirAlerta = true;
-        }
-
-        if (usoDisco > alertaUsoDisco && usoDisco < urgenteUsoDisco){
-            alerta += ("Utilização do disco está em estado de alerta: " + usoDisco + "\n");
-            emitirAlerta = true;
-        } else if (usoDisco > alertaUsoDisco && usoDisco > urgenteUsoDisco){
-            alerta += ("Utilização do disco está em estado crítico: " + usoDisco + "\n");
+        } else if (usoCpu > usoAlarmanteCpu && usoCpu > usoCriticoCpu){
+            alerta += ("Cpu está em estado crítico\n");
             emitirAlerta = true;
         }
 
-        if (usoMemoriaRam > alertaUsoMemoriaRam && usoMemoriaRam < urgenteUsoMemoriaRam){
-            alerta += ("Utilização da memória RAM está em estado de alerta: " + usoMemoriaRam + "\n");
+        if (usoDisco > usoAlarmanteDisco && usoDisco < usoCriticoDisco){
+            alerta += ("Utilização do disco está em estado de alerta\n");
             emitirAlerta = true;
-        } else if (usoMemoriaRam > alertaUsoMemoriaRam && usoMemoriaRam > urgenteUsoMemoriaRam){
-            alerta += ("Utilização da memória RAM está em estado crítico: " + usoMemoriaRam + "\n");
+        } else if (usoDisco > usoAlarmanteDisco && usoDisco > usoCriticoDisco){
+            alerta += ("Utilização do disco está em estado crítico\n");
             emitirAlerta = true;
         }
 
+        if (usoMemoriaRam > usoAlarmanteMemoriaRam && usoMemoriaRam < usoCriticoMemoriaRam){
+            alerta += ("Utilização da memória RAM está em estado de alerta\n");
+            emitirAlerta = true;
+        } else if (usoMemoriaRam > usoAlarmanteMemoriaRam && usoMemoriaRam > usoCriticoMemoriaRam){
+            alerta += ("Utilização da memória RAM está em estado crítico\n");
+            emitirAlerta = true;
+        }
+
+        alerta += "Número de série do notebook: " + numeroNotebook;
         final String alertaFinal = alerta;
 
         if (emitirAlerta){
@@ -88,23 +103,23 @@ public class Parametros {
 
             // Insert no SQL Server
 
-
+            conSQL.update("INSERT INTO Alerta (fkParametros, fkEmpresaParametros) VALUES (?, ?);",
+                    idParametros, fkEmpresa);
 
         }
 
     }
 
     public void insertParametros (){
-        con.update("INSERT INTO Parametros (tempoSegCapturaDeDados, tempoSegAlertas, urgenteUsoCpu, urgenteUsoDisco, urgenteUsoMemoriaRam,\n" +
-                        "    alertaUsoCpu, alertaUsoDisco, alertaUsoMemoriaRam, fkEmpresa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
-                tempoSegCapturaDeDados, tempoSegAlertas, urgenteUsoCpu, urgenteUsoDisco, urgenteUsoMemoriaRam, alertaUsoCpu, alertaUsoDisco, alertaUsoMemoriaRam, fkEmpresa);
+        con.update("INSERT INTO Parametros (tempoSegCapturaDeDados, tempoSegAlertas, UsoCriticoCpu, UsoCriticoDisco, UsoCriticoMemoriaRam, UsoAlarmanteCpu, UsoAlarmanteDisco, UsoAlarmanteMemoriaRam, UsoNormalCpu, UsoNormalDisco, UsoNormalMemoriaRam, fkEmpresa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                tempoSegCapturaDeDados, tempoSegAlertas, usoCriticoCpu, usoCriticoDisco, usoCriticoMemoriaRam, usoAlarmanteCpu, usoAlarmanteDisco, usoAlarmanteMemoriaRam, usoNormalCpu, usoNormalDisco, usoNormalMemoriaRam, fkEmpresa);
     }
 
-    public Integer getidParametros() {
+    public Integer getIdParametros() {
         return idParametros;
     }
 
-    public void setidParametros(Integer idParametros) {
+    public void setIdParametros(Integer idParametros) {
         this.idParametros = idParametros;
     }
 
@@ -124,52 +139,76 @@ public class Parametros {
         this.tempoSegAlertas = tempoSegAlertas;
     }
 
-    public Double getUrgenteUsoCpu() {
-        return urgenteUsoCpu;
+    public Integer getUsoCriticoCpu() {
+        return usoCriticoCpu;
     }
 
-    public void setUrgenteUsoCpu(Double urgenteUsoCpu) {
-        this.urgenteUsoCpu = urgenteUsoCpu;
+    public void setUsoCriticoCpu(Integer usoCriticoCpu) {
+        this.usoCriticoCpu = usoCriticoCpu;
     }
 
-    public Double getUrgenteUsoDisco() {
-        return urgenteUsoDisco;
+    public Integer getUsoCriticoDisco() {
+        return usoCriticoDisco;
     }
 
-    public void setUrgenteUsoDisco(Double urgenteUsoDisco) {
-        this.urgenteUsoDisco = urgenteUsoDisco;
+    public void setUsoCriticoDisco(Integer usoCriticoDisco) {
+        this.usoCriticoDisco = usoCriticoDisco;
     }
 
-    public Double getUrgenteUsoMemoriaRam() {
-        return urgenteUsoMemoriaRam;
+    public Integer getUsoCriticoMemoriaRam() {
+        return usoCriticoMemoriaRam;
     }
 
-    public void setUrgenteUsoMemoriaRam(Double urgenteUsoMemoriaRam) {
-        this.urgenteUsoMemoriaRam = urgenteUsoMemoriaRam;
+    public void setUsoCriticoMemoriaRam(Integer usoCriticoMemoriaRam) {
+        this.usoCriticoMemoriaRam = usoCriticoMemoriaRam;
     }
 
-    public Double getAlertaUsoCpu() {
-        return alertaUsoCpu;
+    public Integer getUsoAlarmanteCpu() {
+        return usoAlarmanteCpu;
     }
 
-    public void setAlertaUsoCpu(Double alertaUsoCpu) {
-        this.alertaUsoCpu = alertaUsoCpu;
+    public void setUsoAlarmanteCpu(Integer usoAlarmanteCpu) {
+        this.usoAlarmanteCpu = usoAlarmanteCpu;
     }
 
-    public Double getAlertaUsoDisco() {
-        return alertaUsoDisco;
+    public Integer getUsoAlarmanteDisco() {
+        return usoAlarmanteDisco;
     }
 
-    public void setAlertaUsoDisco(Double alertaUsoDisco) {
-        this.alertaUsoDisco = alertaUsoDisco;
+    public void setUsoAlarmanteDisco(Integer usoAlarmanteDisco) {
+        this.usoAlarmanteDisco = usoAlarmanteDisco;
     }
 
-    public Double getAlertaUsoMemoriaRam() {
-        return alertaUsoMemoriaRam;
+    public Integer getUsoAlarmanteMemoriaRam() {
+        return usoAlarmanteMemoriaRam;
     }
 
-    public void setAlertaUsoMemoriaRam(Double alertaUsoMemoriaRam) {
-        this.alertaUsoMemoriaRam = alertaUsoMemoriaRam;
+    public void setUsoAlarmanteMemoriaRam(Integer usoAlarmanteMemoriaRam) {
+        this.usoAlarmanteMemoriaRam = usoAlarmanteMemoriaRam;
+    }
+
+    public Integer getUsoNormalCpu() {
+        return usoNormalCpu;
+    }
+
+    public void setUsoNormalCpu(Integer usoNormalCpu) {
+        this.usoNormalCpu = usoNormalCpu;
+    }
+
+    public Integer getUsoNormalDisco() {
+        return usoNormalDisco;
+    }
+
+    public void setUsoNormalDisco(Integer usoNormalDisco) {
+        this.usoNormalDisco = usoNormalDisco;
+    }
+
+    public Integer getUsoNormalMemoriaRam() {
+        return usoNormalMemoriaRam;
+    }
+
+    public void setUsoNormalMemoriaRam(Integer usoNormalMemoriaRam) {
+        this.usoNormalMemoriaRam = usoNormalMemoriaRam;
     }
 
     public Integer getFkEmpresa() {
@@ -183,16 +222,18 @@ public class Parametros {
     @Override
     public String toString() {
         return "Parametros{" +
-                "parametrosConexao=" + parametrosConexao +
-                ", idParametros=" + idParametros +
+                "idParametros=" + idParametros +
                 ", tempoSegCapturaDeDados=" + tempoSegCapturaDeDados +
                 ", tempoSegAlertas=" + tempoSegAlertas +
-                ", urgenteUsoCpu=" + urgenteUsoCpu +
-                ", urgenteUsoDisco=" + urgenteUsoDisco +
-                ", urgenteUsoMemoriaRam=" + urgenteUsoMemoriaRam +
-                ", alertaUsoCpu=" + alertaUsoCpu +
-                ", alertaUsoDisco=" + alertaUsoDisco +
-                ", alertaUsoMemoriaRam=" + alertaUsoMemoriaRam +
+                ", usoCriticoCpu=" + usoCriticoCpu +
+                ", usoCriticoDisco=" + usoCriticoDisco +
+                ", usoCriticoMemoriaRam=" + usoCriticoMemoriaRam +
+                ", usoAlarmanteCpu=" + usoAlarmanteCpu +
+                ", usoAlarmanteDisco=" + usoAlarmanteDisco +
+                ", usoAlarmanteMemoriaRam=" + usoAlarmanteMemoriaRam +
+                ", usoNormalCpu=" + usoNormalCpu +
+                ", usoNormalDisco=" + usoNormalDisco +
+                ", usoNormalMemoriaRam=" + usoNormalMemoriaRam +
                 ", fkEmpresa=" + fkEmpresa +
                 '}';
     }
