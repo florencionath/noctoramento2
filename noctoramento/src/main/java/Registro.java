@@ -56,7 +56,6 @@ public class Registro {
         for (int i = 0; i < volumes.size(); i++){
             Double totalMemoria = volumes.get(i).getTotal() / Math.pow(1024,3);
             Double discoDisponivel = volumes.get(i).getDisponivel() / Math.pow(1024,3);
-            Double totalDisco = discos.get(i).getTamanho() / Math.pow(1024,3);
 
             usoDisco = Math.round(((((totalMemoria - discoDisponivel) * 100) / totalMemoria)));
 
