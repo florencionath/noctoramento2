@@ -11,10 +11,8 @@ CREATE TABLE Empresa (
     senha VARCHAR(45)
 );
 
--- SELECT * FROM Empresa;
 
--- INSERT INTO Empresa (razaoSocial, cnpjEmpresa, email, senha) VALUES 
--- ('Noctoramento', '12345678000195', 'contato@noctoramento.com', 'urubu100');
+
 
 CREATE TABLE Cargo (
     idCargo INT PRIMARY KEY AUTO_INCREMENT,
@@ -30,7 +28,7 @@ INSERT INTO Cargo (nomeCargo) VALUES
     ('Estagiário'),
     ('Suporte');
 
--- SELECT * FROM Cargo;
+
 
 CREATE TABLE Usuario (
     idUsuario INT AUTO_INCREMENT,
@@ -44,7 +42,7 @@ CREATE TABLE Usuario (
     PRIMARY KEY (idUsuario, fkEmpresa)
 );
 
--- SELECT * FROM Usuario;
+
 
 CREATE TABLE Notebook(
     idNotebook INT AUTO_INCREMENT,
@@ -57,7 +55,7 @@ CREATE TABLE Notebook(
     PRIMARY KEY (idNotebook, fkEmpresa)
 );
 
--- SELECT * FROM Notebook;
+
 
 CREATE TABLE InfoNotebook(
     idInfoNotebook INT AUTO_INCREMENT,
@@ -73,7 +71,7 @@ CREATE TABLE InfoNotebook(
     PRIMARY KEY (idInfoNotebook, fkEmpresa, fkNotebook)
 );
 
--- SELECT * FROM InfoNotebook;
+
 
 CREATE TABLE Alocacao(
     dataUsoInicio DATE,
@@ -89,7 +87,7 @@ CREATE TABLE Alocacao(
     PRIMARY KEY (fkNotebook, fkEmpresaNotebook, fkUsuario, fkEmpresaUsuario)
 );
 
--- SELECT * FROM Alocacao;
+
 
 CREATE TABLE Parametros(
     idParametros INT AUTO_INCREMENT,
@@ -109,19 +107,9 @@ CREATE TABLE Parametros(
     PRIMARY KEY (idParametros, fkEmpresa)
 );
 
-INSERT INTO Parametros (
-UsoNormalCpu, UsoNormalDisco, UsoNormalMemoriaRam, 
-    UsoAlarmanteCpu, UsoAlarmanteDisco, UsoAlarmanteMemoriaRam, 
-    UsoCriticoCpu, UsoCriticoDisco, UsoCriticoMemoriaRam, 
-     fkEmpresa
- ) VALUES (
-    50, 70, 60,
-    50, 70, 60,
-    80, 90, 85,
-    1
-);
 
--- SELECT * FROM Parametros;
+
+
 
 CREATE TABLE RegistroUsoNotebook(
 idRegistroUsoNotebook INT AUTO_INCREMENT,
@@ -138,7 +126,7 @@ CONSTRAINT fkEmpresaRegistroUsoNotebook FOREIGN KEY (fkEmpresa) REFERENCES Noteb
 PRIMARY KEY (idRegistroUsoNotebook, fkNotebook, fkEmpresa)
 );
 
--- SELECT * FROM RegistroUsoNotebook;
+
 
 CREATE TABLE Alerta(
     idAlerta INT AUTO_INCREMENT,
@@ -150,4 +138,3 @@ CREATE TABLE Alerta(
     PRIMARY KEY (idAlerta, fkParametros, fkEmpresaParametros)
 );
 
--- SELECT * FROM Alerta;
