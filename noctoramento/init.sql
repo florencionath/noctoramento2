@@ -1,7 +1,7 @@
-CREATE DATABASE Noctoramento;
+
 USE Noctoramento;
 
--- DROP DATABASE Noctoramento;
+
 
 CREATE TABLE Empresa (
     idEmpresa INT PRIMARY KEY AUTO_INCREMENT,
